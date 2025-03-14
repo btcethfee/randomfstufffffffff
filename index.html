@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Exchange</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #222;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 50px;
+        }
+        .exchange-box {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 45%;
+        }
+        .exchange-box h2 {
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .currency-select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            border: none;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            border: none;
+            font-size: 1em;
+        }
+        .button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .price-box {
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+            width: 48%;
+            text-align: center;
+        }
+        .price-box h3 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+        .price-box span {
+            font-size: 1.2em;
+        }
+        .transaction-status {
+            font-size: 1.2em;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+        .transaction-status.success {
+            color: #28a745;
+        }
+        .transaction-status.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Crypto Exchange
+    </header>
+
+    <div class="container">
+        <!-- Buy Section -->
+        <div class="exchange-box">
+            <h2>Buy Cryptocurrency</h2>
+            <select id="buyCurrency" class="currency-select">
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="XRP">Ripple (XRP)</option>
+                <option value="LTC">Litecoin (LTC)</option>
+            </select>
+            <input id="buyAmount" class="input-field" type="number" placeholder="Amount to Buy" />
+            <button class="button" onclick="processTransaction('buy')">Buy Now</button>
+        </div>
+
+        <!-- Sell Section -->
+        <div class="exchange-box">
+            <h2>Sell Cryptocurrency</h2>
+            <select id="sellCurrency" class="currency-select">
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="XRP">Ripple (XRP)</option>
+                <option value="LTC">Litecoin (LTC)</option>
+            </select>
+            <input id="sellAmount" class="input-field" type="number" placeholder="Amount to Sell" />
+            <button class="button" onclick="processTransaction('sell')">Sell Now</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="price-box">
+            <h3>BTC to USD</h3>
+            <span id="btcPrice">Loading...</span>
+        </div>
+        <div class="price-box">
+            <h3>ETH to USD</h3>
+            <span id="ethPrice">Loading...</span>
+        </div>
+    </div>
+
+    <div class="transaction-status" id="transactionStatus"></div>
+
+    <script>
+        // Mock data for demonstration
+        const cryptoPrices = {
+            BTC: 50000,
+            ETH: 3000,
+            XRP: 1.5,
+            LTC: 150
+        };
+
+        // Display current crypto prices
+        function updatePrices() {
+            document.getElementById("btcPrice").textContent = `$${cryptoPrices.BTC}`;
+            document.getElementById("ethPrice").textContent = `$${cryptoPrices.ETH}`;
+        }
+
+        // Handle buy/sell button click
+        function processTransaction(type) {
+            const currency = type === 'buy' ? document.getElementById('buyCurrency').value : document.getElementById('sellCurrency').value;
+            const amount = type === 'buy' ? document.getElementById('buyAmount').value : document.getElementById('sellAmount').value;
+            const price = cryptoPrices[currency];
+
+            if (amount <= 0) {
+                showStatus('error', 'Please enter a valid amount');
+                return;
+            }
+
+            const total = amount * price;
+            showStatus('success', `Transaction ${type} successful! ${amount} ${currency} = $${total}`);
+        }
+
+        // Show transaction status
+        function showStatus(type, message) {
+            const statusElement = document.getElementById('transactionStatus');
+            statusElement.textContent = message;
+            statusElement.className = `transaction-status ${type}`;
+            statusElement.style.display = 'block';
+
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initial update
+        updatePrices();
+    </script>
+</body>
+</html>
